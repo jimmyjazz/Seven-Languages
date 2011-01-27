@@ -1,0 +1,100 @@
+==========================================================
+IO seems to be strongly typed as shown by this terminal session:
+
+switters:io james$ io
+Io 20090105
+Io> 1 + 1
+==> 2
+Io> 1 + "One"
+
+  Exception: argument 0 to method '+' must be a Number, not a 'Sequence'
+  ---------
+  message '+' in 'Command Line' on line 1
+
+Io> "One" + 1
+
+  Exception: Io Assertion 'operation not valid on non-number encodings'
+  ---------
+  message '+' in 'Command Line' on line 1
+
+Io>
+
+==========================================================
+the following code shows which of the basic concepts evaluate to boolean 'true'
+
+Io> if(true, "it's true" println)
+it's true
+==> it's true
+Io> if(false, "it's true" println)
+==> false
+Io> if(0, "it's true" println)
+it's true
+==> it's true
+Io> if(nil, "it's true" println)
+==> false
+Io> if("", "it's true" println)
+it's true
+==> it's true
+Io> if('', "it's true" println)
+
+  Exception: Object does not respond to ''''
+  ---------
+  Object ''                            Command Line 1
+
+Io>
+
+==========================================================
+here is how to get a list of slot names from an object's prototype
+'
+Io> Car proto slotNames
+==> list(type, description)
+Io>
+
+Io> Vehicle proto slotNames
+==> list(ancestorWithSlot, apropos, isTrue, thisLocalContext, asyncSend, <, actorProcessQueue, slotValues, , coroFor, shallowCopy, handleActorException, slotNames, compare, returnIfNonNil, serializedSlotsWithNames, ifNil, coroDo, if, become, slotDescriptionMap, relativeDoFile, ifNilEval, ifError, evalArgAndReturnNil, thisContext, or, raiseIfError, doMessage, markClean, prependProto, removeAllSlots, isIdenticalTo, switch, setSlot, getLocalSlot, ancestors, ifNonNilEval, super, setIsActivatable, currentCoro, do, message, block, print, isActivatable, memorySize, return, init, type, lazySlot, loop, stopStatus, >, doFile, getSlot, perform, clone, removeSlot, continue, ?, method, slotSummary, doRelativeFile, serialized, pause, hasDirtySlot, asString, yield, inlineMethod, isLaunchScript, protos, hasLocalSlot, coroDoLater, justSerialized, setProto, proto, removeAllProtos, launchFile, break, doString, not, serializedSlots, returnIfError, .., deprecatedWarning, ==, println, evalArgAndReturnSelf, setSlotWithType, wait, asSimpleString, thisMessage, in, resend, foreachSlot, ownsSlots, isKindOf, !=, ifNonNil, hasSlot, contextWithSlot, write, @@, appendProto, >=, evalArg, uniqueHexId, <=, coroWith, setProtos, try, and, hasProto, @, isError, while, performWithArgList, actorRun, newSlot, uniqueId, argIsActivationRecord, -, argIsCall, list, updateSlot, cloneWithoutInit, writeln, for, futureSend, removeProto, isNil)
+Io>
+
+==========================================================
+= is used to assign a value to a slot that must already exist
+:= is used to assign a value to a slot even if the slot does not exist
+::= assigns a value to a slot and also creates a setter method as shown here:
+
+Io> ferrari cylinders ::= 8
+==> 8
+Io> ferrari slotNames
+==> list(setCylinders, cylinders)
+Io> ferrari getSlot("setCylinders")
+==> # doString:1
+method(
+    cylinders = call evalArgAt(0); self
+)
+Io> ferrari setCylinders(12)
+==>  Car_0x1004a3910:
+  cylinders        = 12
+  setCylinders     = method(...)
+
+Io>
+
+==========================================================
+Here's how to run an Io program from a file:
+
+cpe-124-185-76-5:io james$ cat run-me.io
+"hello world of Io!" println
+cpe-124-185-76-5:io james$
+cpe-124-185-76-5:io james$ io run-me.io
+hello world of Io!
+cpe-124-185-76-5:io james$
+
+==========================================================
+You invoke a method by name using the perform() method:
+
+Io> ferrari getSlot("drive")
+==> method(
+    "Vroom" println
+)
+Io> ferrari perform("drive")
+Vroom
+==> Vroom
+Io>
+
+==========================================================
